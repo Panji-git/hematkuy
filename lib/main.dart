@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hematkuy/screen/home.dart';
+import 'package:hematkuy/screen/main_page.dart';
 import 'package:hematkuy/screen/splashscreen.dart';
 
 void main() {
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: {
         '/':(context) => SplashPage(),
-        '/home':(context) => HomePage()},
+        '/home':(context) => MainPage()},
     );
   }
 }
