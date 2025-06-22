@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hematkuy/screen/home.dart';
+import 'package:hematkuy/screen/transaksi.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -9,6 +10,14 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  final List<Widget> _children = [HomePage(), TransaksiPage()];
+  int currentIndex = 0;
+
+  void onTapTapped(int index) {
+    setState(() {
+      currentIndex = index;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,16 +26,20 @@ class _MainPageState extends State<MainPage> {
         shape: const CircleBorder(),
         child: Icon(Icons.add, color: Colors.white),
       ),
-      body: HomePage(),
+      body: _children[currentIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         // notchMargin: 6.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          IconButton(onPressed: (){}, icon: Icon(Icons.home, size: 34,)),
+          IconButton(onPressed: (){
+            onTapTapped(0);
+          }, icon: Icon(Icons.home, size: 34, color: currentIndex == 0 ? Color(0xff7857FF) : Colors.grey,)),
           SizedBox(width: 90,),
-          IconButton(onPressed: (){}, icon: Icon(Icons.list, size: 34,))
+          IconButton(onPressed: (){
+            onTapTapped(1);
+          }, icon: Icon(Icons.list, size: 34, color: currentIndex == 1 ? Color(0xff7857FF) : Colors.grey,))
           ]),
         )
     );
