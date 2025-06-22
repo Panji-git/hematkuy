@@ -151,12 +151,29 @@ class _TransaksiPageState extends State<TransaksiPage> {
                           hintText: 'Cari Transaksi',
                           prefixIcon: Icon(Icons.search),
                           filled: true,
-                          fillColor: const Color.fromARGB(255, 200, 199, 199),
+                          fillColor: const Color.fromARGB(255, 236, 236, 236),
                           contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          )
+                            borderRadius: BorderRadius.circular(25),
+                            borderSide: BorderSide(
+                              color: Color(0xff7857FF),
+                              width: 2,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            borderSide: BorderSide(
+                              color: Color(0xff7857FF),
+                              width: 2,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            borderSide: BorderSide(
+                              color: Color(0xff7857FF),
+                              width: 2,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 10,),
