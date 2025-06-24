@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hematkuy/screen/home.dart';
+import 'package:hematkuy/screen/tambah_transaksi.dart';
 import 'package:hematkuy/screen/transaksi.dart';
 
 class MainPage extends StatefulWidget {
@@ -21,7 +22,14 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton.large(onPressed: () {}, 
+      floatingActionButton: FloatingActionButton.large(onPressed: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => AddTransactionPage(),
+          )).
+          then((value) {
+            setState(() {});
+          });
+      }, 
         backgroundColor: Color(0xff7857FF), 
         shape: const CircleBorder(),
         child: Icon(Icons.add, color: Colors.white),
