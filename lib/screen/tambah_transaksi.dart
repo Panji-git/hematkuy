@@ -10,14 +10,16 @@ class AddTransactionPage extends StatefulWidget {
 }
 
 class _AddTransactionPageState extends State<AddTransactionPage> {
-  int selectedIndex = 0; 
+  int selectedIndex = 0;
 
   final List<String> opsi = ['Pendapatan', 'Pengeluaran', 'Tabungan'];
   final List<Color> warna = [Color(0xff7857FF), Color(0xff7857FF), Color(0xff7857FF)];
   final TextEditingController _nominalController = TextEditingController();
   final TextEditingController _deskripsiController = TextEditingController();
   DateTime? selectedDate;
-  
+
+  String selectedDompet = 'E-Wallet';
+  final List<String> sumberDompet = ['E-Wallet', 'Cash', 'Tabungan'];
 
   void _selectDate(BuildContext context) async {
     final now = DateTime.now();
@@ -36,141 +38,187 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(
-      title: Text("Tambah Transaksi",
-      style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 20),),),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Tambah Transaksi",
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(3, (index) {
-                bool isSelected = index == selectedIndex;
-                return Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedIndex = index;
-                      });
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                        color: isSelected ? warna[index].withOpacity(0.2) : const Color.fromARGB(255, 255, 255, 255),
-                        border: Border.all(
-                          color: isSelected ? warna[index] : Color(0xff7857FF),
-                          width: 2,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // 3 Opsi (Pendapatan, Pengeluaran, Tabungan)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(3, (index) {
+                  bool isSelected = index == selectedIndex;
+                  return Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedIndex = index;
+                        });
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          color: isSelected ? warna[index].withOpacity(0.2) : Colors.white,
+                          border: Border.all(
+                            color: isSelected ? warna[index] : Color(0xff7857FF),
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: Text(
-                          opsi[index],
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: isSelected ? warna[index] : Colors.black87,
+                        child: Center(
+                          child: Text(
+                            opsi[index],
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: isSelected ? warna[index] : Colors.black87,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              }),
-            ),
-            const SizedBox(height: 30),
-            TextField(
-              controller: _nominalController,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                labelText: "Nominal",
-                border: OutlineInputBorder(),
-                prefixText: "Rp. ",
+                  );
+                }),
               ),
-            ),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 30),
 
-            // 🗓️ Input Tanggal (pakai Date Picker)
-            GestureDetector(
-              onTap: () => _selectDate(context),
-              child: AbsorbPointer(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: "Tanggal",
-                    border: OutlineInputBorder(),
-                    suffixIcon: Icon(Icons.calendar_today),
-                    hintText: selectedDate != null
-                        ? DateFormat('dd MMMM yyyy').format(selectedDate!)
-                        : "Pilih tanggal",
+              // Input Nominal
+              TextField(
+                controller: _nominalController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: "Nominal",
+                  border: OutlineInputBorder(),
+                  prefixText: "Rp. ",
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Input Tanggal
+              GestureDetector(
+                onTap: () => _selectDate(context),
+                child: AbsorbPointer(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: "Tanggal",
+                      border: OutlineInputBorder(),
+                      suffixIcon: Icon(Icons.calendar_today),
+                      hintText: selectedDate != null
+                          ? DateFormat('dd MMMM yyyy').format(selectedDate!)
+                          : "Pilih tanggal",
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // 📝 Input Deskripsi
-            TextField(
-              controller: _deskripsiController,
-              maxLines: 2,
-              decoration: InputDecoration(
-                labelText: "Deskripsi",
-                border: OutlineInputBorder(),
-              ),
-            ),
-
-            const SizedBox(height: 40),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xff7857FF),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  )
+              // Dropdown Sumber Keuangan
+              DropdownButtonFormField<String>(
+                value: selectedDompet,
+                decoration: InputDecoration(
+                  labelText: 'Sumber Keuangan',
+                  border: OutlineInputBorder(),
                 ),
-                onPressed: () {
-                  // Aksi simpan
-                  final transaksi = {
-                    'tipe': opsi[selectedIndex],
-                    'nominal': _nominalController.text,
-                    'tanggal': selectedDate != null
-                        ? DateFormat('dd MMMM yyyy').format(selectedDate!)
-                        : '',
-                    'deskripsi': _deskripsiController.text,
-                  };
-                  print("Data Disimpan: $transaksi");
-                  // Bisa tambahkan navigasi atau snackbar di sini
+                items: sumberDompet.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedDompet = newValue!;
+                  });
                 },
-                child: Text(
-                  'TAMBAH',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+              ),
+
+              const SizedBox(height: 20),
+
+              // Input Deskripsi
+              TextField(
+                controller: _deskripsiController,
+                maxLines: 2,
+                decoration: InputDecoration(
+                  labelText: "Deskripsi",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              // Tombol Tambah
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xff7857FF),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: () {
+                    final transaksi = {
+                      'tipe': opsi[selectedIndex],
+                      'nominal': _nominalController.text,
+                      'tanggal': selectedDate != null
+                          ? DateFormat('dd MMMM yyyy').format(selectedDate!)
+                          : '',
+                      'deskripsi': _deskripsiController.text,
+                      'dompet': selectedDompet,
+                    };
+                    print("Data Disimpan: $transaksi");
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Transaksi disimpan!")),
+                    );
+
+                    // Clear input
+                    _nominalController.clear();
+                    _deskripsiController.clear();
+                    setState(() {
+                      selectedDate = null;
+                      selectedIndex = 0;
+                      selectedDompet = 'E-Wallet';
+                    });
+                  },
+                  child: Text(
+                    'TAMBAH',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // 🖼️ Logo Aplikasi
-            Image.asset(
-              'assets/images/logo.png',
-              width: 100,
-              height: 100,
-            ),
-
-          ],
+              // Logo aplikasi
+              Image.asset(
+                'assets/images/logo.png',
+                width: 100,
+                height: 100,
+              ),
+            ],
+          ),
         ),
-      )
+      ),
     );
   }
 }
